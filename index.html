@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ckb" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ئامادەبوونی منداڵەکەم</title>
+<meta name="description" content="بینینی دۆخی ئامادەبوونی منداڵەکەت لە قوتابخانە بە شێوەی زیندوو">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2C5444">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ئامادەبوونی منداڵ">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="offlineBar" class="offline-bar" hidden>ئینتەرنێت نییە — دوایین زانیاری نیشان دەدرێت</div>
+
+<main id="app">
+
+  <!-- ===== Tab: منداڵەکان ===== -->
+  <section id="view-home" class="view" aria-label="منداڵەکان">
+    <header class="app-header">
+      <div class="container">
+        <h1>ئامادەبوونی منداڵەکەم</h1>
+        <div class="date" id="todayDate"></div>
+      </div>
+    </header>
+    <div class="container">
+      <div id="childrenList"></div>
+      <div class="empty" id="emptyState">
+        <div class="empty-icon">👨‍👩‍👧</div>
+        هیچ منداڵێک نەبەستراوەتەوە<br>دوگمەی خوارەوە لێبدە بۆ بەستنەوەی منداڵەکەت.
+      </div>
+      <button class="add-btn" data-action="add">+ زیادکردنی منداڵ</button>
+    </div>
+  </section>
+
+  <!-- ===== Tab: ئاگادارییەکان ===== -->
+  <section id="view-alerts" class="view" aria-label="ئاگادارییەکان">
+    <header class="app-header">
+      <div class="container"><h1>ئاگادارییەکان</h1><div class="date">گۆڕانکارییەکانی دۆخی ئامادەبوون</div></div>
+    </header>
+    <div class="container">
+      <div id="alertsList"></div>
+      <div class="empty" id="alertsEmpty">
+        <div class="empty-icon">🔔</div>
+        هێشتا هیچ ئاگاداریەک نییە.<br>کاتێک دۆخی منداڵەکەت بگۆڕێت لێرە دەردەکەوێت.
+      </div>
+      <button class="add-btn ghost" id="clearAlertsBtn" data-action="clear-alerts" hidden>سڕینەوەی ئاگادارییەکان</button>
+    </div>
+  </section>
+
+  <!-- ===== Tab: ڕێکخستن ===== -->
+  <section id="view-settings" class="view" aria-label="ڕێکخستن">
+    <header class="app-header">
+      <div class="container"><h1>ڕێکخستن</h1><div class="date">ئەپ و ئاگادارکردنەوەکان</div></div>
+    </header>
+    <div class="container">
+      <div class="panel">
+        <div class="panel-title">📲 دامەزراندنی ئەپ</div>
+        <div id="installSection"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">🔔 ئاگادارکردنەوەکان</div>
+        <div id="notifStatus" class="panel-text"></div>
+        <button class="btn primary full" id="notifBtn" data-action="enable-notif">چالاککردنی ئاگادارکردنەوەکان</button>
+        <div class="panel-note">ئاگادارکردنەوە کاتێک دەگات کە ئەپەکە کراوەیە یان لە پاشبنەمایە. ئاگادارکردنەوەی تەواو کاتێک ئەپەکە داخراوە پێویستی بە سێرڤەری Push هەیە (بڕوانە README).</div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">👨‍👩‍👧 منداڵە بەستراوەکان</div>
+        <div id="settingsChildren" class="panel-text"></div>
+        <button class="btn danger full" data-action="reset-all">سڕینەوەی هەموو زانیارییەکانی ئەپ</button>
+      </div>
+      <div class="about">وەشانی <span id="appVersion"></span></div>
+    </div>
+  </section>
+
+  <!-- ===== شاشەی وردەکاری منداڵ ===== -->
+  <section id="view-detail" class="view" aria-label="وردەکاری منداڵ">
+    <header class="app-header">
+      <div class="container detail-header">
+        <button class="back" data-action="back" aria-label="گەڕانەوە">→</button>
+        <h1 id="detailName"></h1>
+      </div>
+    </header>
+    <div class="container">
+      <div class="today-card">
+        <div id="detailAvatar"></div>
+        <div id="detailClass" class="cls"></div>
+        <div class="status-line" id="detailStatusLine"></div>
+        <div class="time-line" id="detailTimeLine"></div>
+      </div>
+      <div class="stat-grid" id="statGrid"></div>
+      <div class="actions">
+        <button data-action="unlink-detail">🗑 لابردنی منداڵ</button>
+      </div>
+      <div class="section-title">مێژووی ٣٠ ڕۆژی ڕابردوو</div>
+      <div id="historyList"></div>
+    </div>
+  </section>
+</main>
+
+<nav id="tabbar" class="tabbar" aria-label="ناڤیگەیشن">
+  <a href="#/home" data-tab="home"><span class="ti">🏠</span><span class="tl">منداڵەکان</span></a>
+  <a href="#/alerts" data-tab="alerts"><span class="ti">🔔<i class="dot" id="alertsBadge" hidden></i></span><span class="tl">ئاگاداری</span></a>
+  <a href="#/settings" data-tab="settings"><span class="ti">⚙️</span><span class="tl">ڕێکخستن</span></a>
+</nav>
+
+<div class="toast" id="toast" role="status"></div>
+
+<!-- Sheet: زیادکردنی منداڵ -->
+<div class="overlay" id="addOverlay">
+  <div class="sheet">
+    <h2>زیادکردنی منداڵ</h2>
+    <div class="field">
+      <label for="linkCodeInput">کۆدی پەیوەستکردن</label>
+      <input type="text" id="linkCodeInput" placeholder="کۆدەکە لە قوتابخانەوە وەردەگریت" autocomplete="off" autocapitalize="characters" dir="ltr">
+    </div>
+    <div class="err" id="addErr" hidden></div>
+    <div class="btn-row">
+      <button class="btn ghost" data-action="close-add">پاشگەزبوونەوە</button>
+      <button class="btn primary" id="addSubmitBtn" data-action="submit-add">دۆزینەوە و زیادکردن</button>
+    </div>
+  </div>
+</div>
+
+<!-- Sheet: دڵنیابوونەوە -->
+<div class="overlay" id="confirmOverlay">
+  <div class="sheet">
+    <h2 id="confirmTitle">دڵنیایت؟</h2>
+    <div class="btn-row">
+      <button class="btn ghost" id="confirmCancelBtn">پاشگەزبوونەوە</button>
+      <button class="btn danger" id="confirmOkBtn">بەڵێ</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-database-compat.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
